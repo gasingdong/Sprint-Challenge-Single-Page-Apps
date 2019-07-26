@@ -10,6 +10,7 @@ export default function CharacterList(): ReactElement {
     async function getCharacters(): Promise<void> {
       try {
         const result = await axios.get(url);
+        console.log(result.data.results);
         setCharacters(result.data.results);
       } catch (err) {
         console.log(err);
@@ -23,7 +24,7 @@ export default function CharacterList(): ReactElement {
     <section className="character-list grid-view">
       {characters.map(
         (character, index): ReactElement => (
-          <CharacterCard key={index} />
+          <CharacterCard key={index} character={character} />
         )
       )}
     </section>
