@@ -9,7 +9,7 @@ const Nav: React.FC<NavLinkProps> = (props): ReactElement => (
 );
 
 const createLabel = (
-  iconName: 'home' | 'users' | 'location arrow' | 'tv',
+  iconName: 'home' | 'users' | 'location arrow' | 'tv' | 'search',
   labelText: string
 ): ReactElement => (
   <span>
@@ -22,6 +22,7 @@ const welcomeLabel = createLabel('home', 'Home Page');
 const characterLabel = createLabel('users', 'Characters');
 const locationLabel = createLabel('location arrow', 'Locations');
 const episodeLabel = createLabel('tv', 'Episodes');
+const searchLabel = createLabel('search', 'Search');
 
 const panes = [
   {
@@ -55,6 +56,11 @@ const panes = [
         to={`/episodes`}
         content={episodeLabel}
       />
+    ),
+  },
+  {
+    menuItem: (
+      <Menu.Item key="search" as={Nav} to={`/search`} content={searchLabel} />
     ),
   },
 ];

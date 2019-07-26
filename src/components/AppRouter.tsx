@@ -4,6 +4,7 @@ import CharacterList from './CharacterList';
 import WelcomePage from './WelcomePage';
 import LocationsList from './LocationsList';
 import EpisodesList from './EpisodesList';
+import SearchForm from './SearchForm';
 
 export default function AppRouter(): ReactElement {
   return (
@@ -12,6 +13,7 @@ export default function AppRouter(): ReactElement {
         <Route path="/characters" component={CharacterList} />
         <Route path="/locations" component={LocationsList} />
         <Route path="/episodes" component={EpisodesList} />
+        <Route path="/search" component={SearchForm} />
         <Route component={WelcomePage} />
         {/* <Route path="/episodes" component={} /> */}
       </Switch>
