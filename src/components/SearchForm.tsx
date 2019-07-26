@@ -1,9 +1,10 @@
 import React, { useState, ReactElement, useEffect } from 'react';
 import axios from 'axios';
 import CharacterCard from './CharacterCard';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function SearchForm(): ReactElement {
-  const [name, setName] = useState('');
+  const [name, setName] = useLocalStorage('search', '');
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const queryUrl = `https://rickandmortyapi.com/api/character/?name=${search}`;
