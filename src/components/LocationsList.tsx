@@ -6,18 +6,24 @@ export default function LocationsList(): ReactElement {
   const [locations, setLocations] = useState([]);
   const url = 'https://rickandmortyapi.com/api/location/';
 
-  useEffect((): void => {
+  useEffect((): (() => void) => {
+    let isMounted = true;
     async function getLocations(): Promise<void> {
       try {
         const result = await axios.get(url);
-        console.log(result.data.results);
-        setLocations(result.data.results);
+
+        if (isMounted) {
+          setLocations(result.data.results);
+        }
       } catch (err) {
         console.log(err);
       }
     }
 
     getLocations();
+    return (): void => {
+      isMounted = false;
+    };
   }, [url]);
 
   return (

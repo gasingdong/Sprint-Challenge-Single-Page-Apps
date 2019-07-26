@@ -6,18 +6,24 @@ export default function CharacterList(): ReactElement {
   const [characters, setCharacters] = useState([]);
   const url = 'https://rickandmortyapi.com/api/character/';
 
-  useEffect((): void => {
+  useEffect((): (() => void) => {
+    let isMounted = true;
     async function getCharacters(): Promise<void> {
       try {
         const result = await axios.get(url);
-        console.log(result.data.results);
-        setCharacters(result.data.results);
+
+        if (isMounted) {
+          setCharacters(result.data.results);
+        }
       } catch (err) {
         console.log(err);
       }
     }
 
     getCharacters();
+    return (): void => {
+      isMounted = false;
+    };
   }, [url]);
 
   return (

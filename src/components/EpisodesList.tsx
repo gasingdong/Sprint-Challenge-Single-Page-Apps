@@ -6,18 +6,24 @@ export default function EpisodesList(): ReactElement {
   const [episodes, setEpisodes] = useState([]);
   const url = 'https://rickandmortyapi.com/api/episode/';
 
-  useEffect((): void => {
+  useEffect((): (() => void) => {
+    let isMounted = true;
     async function getEpisodes(): Promise<void> {
       try {
         const result = await axios.get(url);
-        console.log(result.data.results);
-        setEpisodes(result.data.results);
+
+        if (isMounted) {
+          setEpisodes(result.data.results);
+        }
       } catch (err) {
         console.log(err);
       }
     }
 
     getEpisodes();
+    return (): void => {
+      isMounted = false;
+    };
   }, [url]);
 
   return (
