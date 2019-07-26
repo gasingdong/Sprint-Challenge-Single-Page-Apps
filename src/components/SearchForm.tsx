@@ -1,30 +1,62 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, useEffect } from 'react';
+import axios from 'axios';
+import CharacterCard from './CharacterCard';
 
-export default function SearchForm({
-  onSearch,
-}: {
-  onSearch: (query: { name: string }) => void;
-}): ReactElement {
-  const [query, setQuery] = useState({
-    name: '',
-  });
+export default function SearchForm(): ReactElement {
+  const [name, setName] = useState('');
+  const [search, setSearch] = useState('');
+  const [results, setResults] = useState([]);
+  const queryUrl = `https://rickandmortyapi.com/api/character/?name=${search}`;
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    setQuery({ ...query, name: event.target.value });
+    setName(event.target.value);
   };
 
+  const onSearch = (
+    event: React.FormEvent<HTMLFormElement>,
+    name: string
+  ): void => {
+    event.preventDefault();
+    setSearch(name);
+  };
+
+  useEffect((): (() => void) => {
+    let isMounted = true;
+    async function getResults(): Promise<void> {
+      const results = await axios.get(queryUrl);
+
+      if (isMounted) {
+        setResults(results.data.results);
+      }
+    }
+
+    search ? getResults() : setResults([]);
+    return (): void => {
+      isMounted = false;
+    };
+  }, [search, queryUrl]);
+
   return (
-    <section className="search-form">
-      <form onSubmit={(): void => onSearch(query)}>
-        <input
-          onChange={handleInputChange}
-          placeholder="name"
-          value={query.name}
-          name="name"
-        />
-        <button type="submit">Search</button>
-      </form>
-    </section>
+    <div>
+      <section className="search-form">
+        <form onSubmit={(event): void => onSearch(event, name)}>
+          <input
+            onChange={handleInputChange}
+            placeholder="name"
+            value={name}
+            name="name"
+          />
+          <button type="submit">Search</button>
+        </form>
+      </section>
+      <section className="character-list grid-view">
+        {results.map(
+          (character, index): ReactElement => (
+            <CharacterCard key={index} character={character} />
+          )
+        )}
+      </section>
+    </div>
   );
 }
